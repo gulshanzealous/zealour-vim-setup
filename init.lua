@@ -65,6 +65,25 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>fh", builtin.help_tags)
     end,
   },
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+
+    config = function()
+      print("AUTOPAIRS LOADED")
+      require("nvim-autopairs").setup({})
+    end,
+  },
+  {
+    "L3MON4D3/LuaSnip",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
+  },
+
+  {
+    "saadparwaiz1/cmp_luasnip",
+  },
 
   -- =========================
   -- TREESITTER
@@ -133,11 +152,18 @@ require("lazy").setup({
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
     },
     config = function()
       local cmp = require("cmp")
 
       cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
         mapping = cmp.mapping.preset.insert({
           ["<Tab>"] = cmp.mapping.select_next_item(),
           ["<S-Tab>"] = cmp.mapping.select_prev_item(),
@@ -145,6 +171,7 @@ require("lazy").setup({
         }),
         sources = {
           { name = "nvim_lsp" },
+          { name = "luasnip" },
         },
       })
     end,
@@ -252,3 +279,5 @@ require("lazy").setup({
     end,
   }
 })
+
+require("luasnip.loaders.from_vscode").lazy_load()
