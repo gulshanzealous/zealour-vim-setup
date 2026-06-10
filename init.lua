@@ -236,6 +236,10 @@ require("lazy").setup({
     priority = 1000,
   },
   {
+    "numToStr/Comment.nvim",
+    config = true,
+  },
+  {
     "zaldih/themery.nvim",
     lazy = false,
     config = function()
@@ -281,3 +285,21 @@ require("lazy").setup({
 })
 
 require("luasnip.loaders.from_vscode").lazy_load()
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function()
+    local opts = { buffer = true }
+
+    vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
+
+    vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], opts)
+    vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], opts)
+    vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], opts)
+    vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], opts)
+  end,
+})
+
+vim.keymap.set("n", "<C-h>", "<C-w>h", { silent = true })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { silent = true })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { silent = true })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })

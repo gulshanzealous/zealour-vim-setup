@@ -1,0 +1,463 @@
+Neovim shortcuts sheet
+
+^ : move to first non whitespace character
+
+$: move to end of line
+
+G: move to end of file
+
+gg: move to start of file
+
+(number) gg: move to line
+
+(number) yy : copy/yank  (number is no of lines to copy in downward direction)
+
+dd: cut/delete
+
+p: paste on current line
+
+shift+p / P : copy before current line
+
+w (W) : move to start of next word
+
+b (B): move start of prev word
+
+e (E): move to end of current word
+
+ge (GE): move to end to prev word
+
+f (pause) search term : take you to the next occurrence of the character in the current line
+F (pause) -> search term : takes you to prev occurrence of the character in the current line
+
+t (pause) search-term :  takes you immediately before the next occurrence of the character in current line
+T (pause) search-term: takes you immediately before the prev occurrence of the character in current line
+
+{ : jump paragraph upwards
+
+} : jump para downwards
+
+CTRL-D lets you move down half a page by scrolling the page
+CTRL-U lets you move up half a page also by scrolling
+
+
+/  <search term> : search for regex forwards from current cursor position
+? <search term> : search for regex backwards
+<n> / <search term> : move for nth occurrence of search term e.g. 3/func will jump to third occurrence of func forward
+Enter : go to first search match
+n : go to next occurrence
+N: go to prev occurrence
+
+/ <Enter> : go to the first match for most recent search regex forwards from cursor
+? <Enter> : same but search backwards
+
+* : search for the word under the cursor forwards
+#: search for the word under the cursor backwards
+
+u : undo last change
+CTRL R : redo
+
+gd: jump to definition of word under cursor
+ctrl + o : get back from above
+gf: jump to file of the import under the cursor
+
+% jump to matching ({[]})
+
+
+d : corresponds to the delete operator. Since d is an operator, you can follow the {operator}{count}{motion} formula and combine it with all the motions you’ve learned thus far:
+
+d5j : to delete 5 lines downwards
+df' : to delete everything in the current line from the cursor until the first occurrence of the ' character (including the character itself)
+Or type dt' to do like the above example but excluding the character (so up until or just before the ' character)
+Use d/hello to delete everything until the first occurrence of hello
+Type ggdG to delete a complete document
+
+
+
+
+c (change): Change deletes a piece of text and then sends you into Insert mode so that you can continue typing, changing the original text into something else. The change operator is like the d and i commands combined into onetwo. This duality makes it the most useful operator
+
+a : (a text object plus whitespace)
+ i  : (inner object without whitespace)
+w for word
+s for sentence
+', ", ` for quotes
+p for paragraph
+b (or (, )) for block surrounded by (),
+B (or {, }) for block surrounded by {}
+<, > for a block surrounded by <>
+[, ] for a block surrounded by []
+t for tag.
+	e.g.
+daw to delete a word (plus trailing whitespace)
+ciw to change inner word
+das to delete a sentence (dis to delete inner sentence)
+da" to delete something in double quotes including the quotes themselves (di" deletes only the content inside the quotes and spares the quotes)
+ci" to change something inside double quotes
+dap to delete a paragraph
+dab da( or da) to delete a block surrounded by (
+daB da{ or da} to delete a block surrounded by {
+dat to delete an HTML tag
+cit to change the contents of an HTML tag
+
+o : open new line below
+O: open new line above
+
+i :  insert command puts you in insert mode before the cursor
+a:  insert command puts you in insert mode after the cursor
+
+I : puts you in Insert mode at the beginning of the current line whilst,
+A : puts you in Insert mode at the end.
+.   :  repeat last command
+ So let’s remove another line of code. How would you go about that? You could type dd again but, even better, you could use the . command which is just a single keystroke
+The . command works great in combination with the repeat search commands (;, ,, n or N). Imagine that you want to delete all occurrences of cucumber. A possible approach would be to search for cucumber /cucumber, delete it with daw and, from then on, use n to go to the next match and . to delete it! Two keystrokes!?! Again think of the possibilities!!
+
+ctrl + } : show all implementation vscode neovim
+
+
+
+
+Registers
+
+Registers in Vim let you run actions or commands on text stored within them. To access a register, you type "a before a command, where a is the name of a register. If you want to copy the current line into register k, you can type
+"kyy
+Or you can append to a register by using a capital letter
+"Kyy
+You can then move through the document and paste it elsewhere using
+"kp
+To paste from system clipboard on Linux
+"+p
+To paste from system clipboard on Windows (or from "mouse highlight" clipboard on Linux)
+"*p
+To access all currently defined registers type
+:reg
+
+
+
+
+I was pleased when I discovered the 0 register. If you yank text without assigning it to a particular register, then it will be assigned to the 0 register, as well as being saved in the default " register. The difference between the 0 and " registers is that 0 is only populated with yanked text, whereas the default register is also populated with text deleted using d/D/x/X/c/C/s/S commands.
+I find this useful when I want to copy some text, delete something and replace it with the copied text. The following steps illustrate an example:
+Yank the text you want to copy with y[motion] - this text is saved in " and 0 registers
+Delete the text you want to replace with d[motion] - this text is saved in " register
+Paste the yanked text with "0p
+where " is the command to use a register for the next command.
+On the final step, if you were to paste from the default register (with p), it would use the text that you had just deleted (probably not what you intended).
+Note that p or P pastes from the default register. The longhand equivalent would be ""p (or ""P) and "0 holds the last yank, "1holds the last delete or change.
+
+
+YANK
+
+yl yanks a letter,
+yaw yanks a word,
+yas yanks a sentence
+yi( yanks everything within ( and so on…
+
+p pastes something after the cursor
+P pastes something before the cursor
+gp same as p but puts the cursor after the pasted selection
+gP same as P and puts the cursor after the pasted selection
+Want to swap a couple of lines? Type ddp.
+
+"+y : yank to clipboard
+
+search replace substitution
+
+current line->   :s/led/gold/g
+current file->    :%s/led/gold
+exact match->  /\<your_exact_word\>
+exact match sub in curr file->  :%s/\<led\>/gold
+
+neovim tsserver lsp
+Shift + k  -> show type
+ctrl +c   -> yank all file
+
+
+line numbers config
+
+https://jeffkreeftmeijer.com/vim-number/#:~:text=With%20relative%20line%20numbers%2C%20you,came%20from%2C%20you%20use%2013j%20.
+
+normal numbers ->  :set nu
+relative -> :set rnu
+hybrid -> :set nu rnu
+
+:set nu
+
+os specific
+vscode : linux
+
+backreference : ctrl + alt + -
+
+
+
+
+
+
+========================
+NEOVIM CHEATSHEET (FINAL SETUP)
+========================
+
+========================
+SEARCH / NAVIGATION (Telescope)
+========================
+<leader>ff   Find files in project
+<leader>fg   Search text across codebase (grep)
+<leader>fb   Open buffers (recent files)
+<leader>fh   Search help/docs
+
+========================
+FILE EXPLORER (nvim-tree)
+========================
+<leader>e    Toggle file tree sidebar
+<leader>ef   Focus file tree
+<leader>er   Reveal current file in tree
+
+INSIDE TREE
+a → add file/folder
+r → rename
+d → delete
+Enter → open file
+
+========================
+CODE NAVIGATION (LSP)
+========================
+gd           Go to definition
+gr           Find references (usage of symbol)
+K            Hover docs / type info
+
+========================
+HISTORY NAVIGATION (IMPORTANT)
+========================
+Ctrl+o       Go back (previous location/jump stack)
+Ctrl+i       Go forward
+
+NOTE:
+- Works after gd, gr, search, file jumps
+
+========================
+ERROR NAVIGATION
+========================
+[d           Previous error
+]d           Next error
+<leader>d    Show error popup details
+
+========================
+REFACTOR / CODE ACTIONS
+========================
+<leader>rn   Rename symbol across project
+<leader>ca   Code actions (fix imports/refactor)
+<leader>f    Format file
+
+========================
+TERMINAL (toggleterm)
+========================
+<leader>t    Toggle terminal open/close
+
+INSIDE TERMINAL:
+Ctrl+\ Ctrl+n   Exit terminal mode → back to Neovim
+
+NOTE:
+- You must exit terminal mode before moving windows
+
+========================
+WINDOW SPLITS
+========================
+:vs          Vertical split (left/right)
+:sp          Horizontal split (top/bottom)
+
+MOVE BETWEEN SPLITS:
+Ctrl+w h     Left window
+Ctrl+w l     Right window
+Ctrl+w j     Down window
+Ctrl+w k     Up window
+
+WINDOW ACTIONS:
+Ctrl+w c     Close current split
+Ctrl+w o     Close all others (focus one)
+Ctrl+w =     Equalize window sizes
+
+========================
+Telescope SPLIT OPENING
+========================
+Ctrl+v       Open file in vertical split
+Ctrl+x       Open file in horizontal split
+Enter        Open normally (replace window)
+
+========================
+SEARCH IN FILE
+========================
+/pattern     Search forward
+n            Next match
+N            Previous match
+
+========================
+BASIC EDITING
+========================
+gg           Top of file
+G            Bottom of file
+dd           Delete line
+yy           Copy line
+p            Paste
+u            Undo
+Ctrl+r       Redo
+
+========================
+THEME SWITCHING (Themery)
+========================
+<leader>tt   Open theme picker (live preview)
+
+AVAILABLE THEMES:
+tokyonight-night
+catppuccin
+gruvbox
+rose-pine
+kanagawa
+
+NOTE:
+- requires themes installed via lazy.nvim
+- live preview + enter to apply
+
+========================
+CORE MINDSET
+========================
+Telescope → find anything
+LSP        → understand code
+Ctrl+o     → go back anytime
+Splits     → compare files
+Themery    → change look/feel instantly
+Terminal   → run + test instantly
+
+========================
+REAL WORKFLOW (GO / CADDY STYLE)
+========================
+1. <leader>ff   → open entry file
+2. gd           → dive into function
+3. gr           → check usage
+4. Ctrl+w v     → open reference side-by-side
+5. <leader>fg   → search logic globally
+6. <leader>t    → run/test
+7. Ctrl+o       → go back when deep
+
+========================
+BUFFERS (OPEN FILES)
+========================
+
+:ls / :buffers     List all open files (buffers)
+:b <num>           Jump to buffer number
+:bn                Next buffer
+:bp                Previous buffer
+:bdelete           Close current buffer
+
+NOTE:
+Buffers = all open files in memory (core Neovim model)
+
+========================
+BUFFER NAVIGATION (RECOMMENDED WAY)
+========================
+
+<leader>fb        Search and switch buffers (Telescope)
+
+NOTE:
+This is the most practical way in your setup
+
+========================
+HARPOON (HOT FILES / FAST SWITCHING)
+========================
+
+<leader>a         Mark current file
+<leader>h         Open Harpoon menu
+<leader>1         Go to file 1
+<leader>2         Go to file 2
+<leader>3         Go to file 3
+<leader>4         Go to file 4
+
+NOTE:
+Harpoon = your "important working set" (better than tabs)
+
+========================
+WINDOW NAVIGATION (SPLITS)
+========================
+
+Ctrl+w h         Left window
+Ctrl+w l         Right window
+Ctrl+w j         Down window
+Ctrl+w k         Up window
+
+:vs              Vertical split
+:sp              Horizontal split
+
+========================
+TABS (RARELY USED IN MODERN NEOVIM)
+========================
+
+:tabnew          Open new tab
+:tabnext         Next tab
+:tabprev         Previous tab
+:tabclose        Close tab
+
+NOTE:
+Tabs = workspace layouts, NOT file switching (avoid using for files)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+references:
+https://www.barbarianmeetscoding.com/boost-your-coding-fu-with-vscode-and-vim/moving-blazingly-fast-with-the-core-vim-motions/
+https://www.shortcutfoo.com/app/dojos/neovim/cheatsheet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
