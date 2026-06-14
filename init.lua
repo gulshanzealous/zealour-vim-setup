@@ -115,7 +115,21 @@ require("lazy").setup({
       })
     end,
   },
-
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      format_on_save = false,
+      formatters_by_ft = {
+        html = { "prettier" },
+        yaml = { "prettier" },
+        json = { "prettier" },
+        markdown = { "prettier" },
+        lua = { "stylua" },
+        go = { "gofmt" },
+        ruby = { "standardrb" },
+      },
+    },
+  },
   -- =========================
   -- LSP (NEOVIM 0.11+)
   -- =========================
@@ -125,6 +139,20 @@ require("lazy").setup({
       -- Enable LSP servers (NEW API)
       vim.lsp.enable("gopls")
       vim.lsp.enable("ts_ls")
+
+      -- Web
+      vim.lsp.enable("html")
+      vim.lsp.enable("cssls")
+      vim.lsp.enable("jsonls")
+
+      -- YAML (blog.yml, config.yml etc.)
+      vim.lsp.enable("yamlls")
+
+      -- Markdown (docs, blog writing)
+      vim.lsp.enable("marksman")
+
+      -- Ruby (your CLI + Jekyll tooling)
+      vim.lsp.enable("solargraph")
 
       -- Keymaps
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
@@ -140,7 +168,7 @@ require("lazy").setup({
 
       -- Format
       vim.keymap.set("n", "<leader>f", function()
-        vim.lsp.buf.format()
+        require("conform").format({ async = true })
       end)
     end,
   },
@@ -303,3 +331,26 @@ vim.keymap.set("n", "<C-h>", "<C-w>h", { silent = true })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { silent = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { silent = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
+
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd("nohlsearch")
+end)
+
+vim.keymap.set("n", "K", function()
+  local line_diags = vim.diagnostic.get(0, {
+    lnum = vim.api.nvim_win_get_cursor(0)[1] - 1,
+  })
+
+  if #line_diags > 0 then
+    vim.diagnostic.open_float()
+  else
+    vim.lsp.buf.hover()
+  end
+end)
+
+
+vim.filetype.add({
+  extension = {
+    tpl = "html",
+  },
+})
